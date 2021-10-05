@@ -1,5 +1,4 @@
 import java.io.*;
-import java.util.regex.Pattern;
 
 //Begine by setting up this class to handle the user input
 public class InputHandler{
@@ -27,6 +26,7 @@ public class InputHandler{
     }
   }
 
+  //characters NOT to remove
   public static String notChars = "[^dr\\=\\%\\^\\*\\+\\-\\d/\\s\\\\]";
 
   /* It's very hard to consider everything the user might try to input. This method
@@ -41,8 +41,11 @@ public class InputHandler{
     }
     //User has entered something
     else{
+      //remove the comments first
+      String noComments = string.replaceAll("#.*?#", "");
+      System.out.println(noComments);
       //remove everything that we dont care about
-      String removeNotAllowed = string.replaceAll(notChars, "");
+      String removeNotAllowed = noComments.replaceAll(notChars, "");
       //remove extra whitespaces
       String removeWhitespaces = removeNotAllowed.replaceAll("\\s+", " ");
       if(removeWhitespaces == null || removeWhitespaces.length()==0){
@@ -50,10 +53,14 @@ public class InputHandler{
       }
       else{
         //return removeWhitespaces;
-        return addWhitetoOperator(removeWhitespaces);
+        return addWhitetoOperator(removeWhitespaces.trim());
       }
     }
   }
+
+  //This method is called to place a whitespace between user input to make
+  //sure everything reaches the math method in the same format
+  //1+1 == 1 + 1 
   private static String addWhitetoOperator(String string){
     StringBuilder stringBuilder = new StringBuilder();
     for(String character : string.split("")){
@@ -73,12 +80,23 @@ public class InputHandler{
         case "*":
           stringBuilder.append(" * ");
           break;
+        case "=":
+          stringBuilder.append(" = ");
+          break;
+        case "d":
+          stringBuilder.append(" d ");
+          break;
+        case "r":
+          stringBuilder.append(" r ");
+          break;
+        case "^":
+          stringBuilder.append(" ^ ");
+          break;
         default:
           stringBuilder.append(character);
           break;
       }
     }
     return stringBuilder.toString();
-
   }
 }

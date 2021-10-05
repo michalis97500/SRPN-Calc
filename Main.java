@@ -15,8 +15,7 @@ class Main {
   public static double randomNumber(int _int) {
     return randomArray[_int];
   }
-  public static void populateArray() {
-    //this method will populate an array with "random" numbers that the user might need
+  public static void populateArray() { //this method will populate an array with "random" numbers that the user might need
     int i = 0;
     try {
       //Begin by checking that our file is compatible with the array that we have
@@ -46,26 +45,11 @@ class Main {
       System.out.println("Error on array population : " + e);
     }
   }
-  //This method will determine if the result is saturated and if it is, will yield
-  //min/max int limit
-  public static int intLimit(int _integer) {
-    if (_integer > 0) {
-      if (_integer > Integer.MAX_VALUE) {
-        return Integer.MAX_VALUE;
-      } else {
-        return _integer;
-      }
-    }
-    if (_integer < 0) {
-      if (_integer < Integer.MIN_VALUE) {
-        return Integer.MIN_VALUE;
-      } else {
-        return _integer;
-      }
-    }
-    //escaped both if statments, must be 0
-    return 0;
-  }
+
+  //DELETED : This method will determine if the result is saturated and if it is, will yield
+  //min/max int limit 
+  //REASON : casting a double to an int and back again saturates it
+
   /*Since all inputs are split by either a space or a "\n", the input of this function expects
   that the string is formatted in that way. In the following method the string is broken 
   split by whitespaces to a variable "oper" (for both operand and operator) using a loop. Within the loop the method will check what exactly is oper and determine what to do with it. 
@@ -79,8 +63,7 @@ class Main {
     try {
       //Split the string into the different operators/operands, loop for all
       for (String oper: expr.split("\\s")) {
-        double secondOperand = 0.0;
-        double firstOperand = 0.0;
+        double number1 = 0.0 , number2 = 0.0;
         //Statements that can be executed with stack size < 1:
         //push number to stack, stack display, last answer,push random to stack
         if (oper.matches("-?\\d+(\\.\\d+)?") && oper.isEmpty() == false && oper.isBlank() == false) {
@@ -97,7 +80,7 @@ class Main {
         if (oper.matches("=")) {
           double last = stack.pop();
           pushDoubleToStack(stack, last);
-          System.out.println("Last Answer: " + last);
+          System.out.println("Answer: " + last);
         }
         if (oper.matches("r")) {
           if (n > 59) {
@@ -113,38 +96,40 @@ class Main {
           if (stack.size() > 1) {
             switch (oper) {
             case "+":
-              secondOperand = stack.pop();
-              firstOperand = stack.pop();
-              pushDoubleToStack(stack, firstOperand + secondOperand);
+              number2 = stack.pop();
+              number1 = stack.pop();
+              pushDoubleToStack(stack, number1 + number2);
               break;
             case "-":
-              secondOperand = stack.pop();
-              firstOperand = stack.pop();
-              pushDoubleToStack(stack, firstOperand - secondOperand);
+              number2 = stack.pop();
+              number1 = stack.pop();
+              pushDoubleToStack(stack, number1 - number2);
               break;
             case "*":
-              secondOperand = stack.pop();
-              firstOperand = stack.pop();
-              pushDoubleToStack(stack, firstOperand * secondOperand);
+              number2 = stack.pop();
+              number1 = stack.pop();
+              pushDoubleToStack(stack, number1 * number2);
               break;
             case "/":
-              secondOperand = stack.pop();
-              firstOperand = stack.pop();
-              if (secondOperand == 0.0) {
+              number2 = stack.pop();
+              number1 = stack.pop();
+              if (number2 == 0.0) {
                 System.out.println("Cannot divide by zero!");
+                pushDoubleToStack(stack, number1);
+                pushDoubleToStack(stack, number2);
                 break;
               }
-              pushDoubleToStack(stack, firstOperand / secondOperand);
+              pushDoubleToStack(stack, number1 / number2);
               break;
             case "^":
-              secondOperand = stack.pop();
-              firstOperand = stack.pop();
-              pushDoubleToStack(stack, Math.pow(firstOperand, secondOperand));
+              number2 = stack.pop();
+              number1 = stack.pop();
+              pushDoubleToStack(stack, Math.pow(number1, number2));
               break;
             case "%":
-              secondOperand = stack.pop();
-              firstOperand = stack.pop();
-              pushDoubleToStack(stack, firstOperand % secondOperand);
+              number2 = stack.pop();
+              number1 = stack.pop();
+              pushDoubleToStack(stack, number1 % number2);
               break;
             }
           } else {
@@ -164,8 +149,8 @@ class Main {
     }
     //stack is not too large
     else {
-      //saturate number if too large
-      stack.push((double) intLimit((int) number));
+      //saturate number if too large. By casting the double to an int it saturates it
+      stack.push((double)(int)number);
     }
   }
   //Main function
