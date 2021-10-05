@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.regex.Pattern;
 
 //Begine by setting up this class to handle the user input
 public class InputHandler{
@@ -26,8 +27,9 @@ public class InputHandler{
     }
   }
 
+  public static String notChars = "[^dr\\=\\%\\^\\*\\+\\-\\d/\\s\\\\]";
 
-  /* It's very had to consider everything the user might try to input. This method
+  /* It's very hard to consider everything the user might try to input. This method
   will attempt to strip the string from anything that the user might enter but is not
   actually usefull/accepted by the SRPN calculator. It basically formats the string in a
   way that our doMath method (found in Main) works
@@ -40,15 +42,43 @@ public class InputHandler{
     //User has entered something
     else{
       //remove everything that we dont care about
-      String removeNotAllowed = string.replaceAll("[^dr\\=\\%\\^\\*\\+\\-\\d/\\s\\\\]", "");
+      String removeNotAllowed = string.replaceAll(notChars, "");
       //remove extra whitespaces
       String removeWhitespaces = removeNotAllowed.replaceAll("\\s+", " ");
       if(removeWhitespaces == null || removeWhitespaces.length()==0){
         return " ";
       }
       else{
-        return removeWhitespaces;
+        //return removeWhitespaces;
+        return addWhitetoOperator(removeWhitespaces);
       }
     }
+  }
+  private static String addWhitetoOperator(String string){
+    StringBuilder stringBuilder = new StringBuilder();
+    for(String character : string.split("")){
+      switch(character){
+        case "+":
+          stringBuilder.append(" + ");
+          break;
+        case "-":
+          stringBuilder.append(" -");
+          break;
+        case "/":
+          stringBuilder.append(" / ");
+          break;
+        case "%":
+          stringBuilder.append(" % ");
+          break;
+        case "*":
+          stringBuilder.append(" * ");
+          break;
+        default:
+          stringBuilder.append(character);
+          break;
+      }
+    }
+    return stringBuilder.toString();
+
   }
 }
