@@ -43,7 +43,6 @@ public class InputHandler{
     else{
       //remove the comments first
       String noComments = string.replaceAll("#.*?#", "");
-      System.out.println(noComments);
       //remove everything that we dont care about
       String removeNotAllowed = noComments.replaceAll(notChars, "");
       //remove extra whitespaces

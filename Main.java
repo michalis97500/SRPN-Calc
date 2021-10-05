@@ -24,7 +24,7 @@ class Main {
       //simple counter
       while (lineCount.hasNextDouble()) {
         i++;
-        double dummy = lineCount.nextDouble();
+        double dummy = lineCount.nextDouble(); //without this running on repl.it causes endless loop
       }
       lineCount.close();
       if (i != 60) {
