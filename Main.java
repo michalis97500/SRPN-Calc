@@ -85,6 +85,12 @@ class Main {
               case "^":
                 number2 = stack.pop();
                 number1 = stack.pop();
+                if (number2 < 0){
+                  System.out.println("Negative Power.");
+                  pushDoubleToStack(stack, number1);
+                  pushDoubleToStack(stack, number2);
+                  break;
+                }
                 pushDoubleToStack(stack, Math.pow(number1, number2));
                 break;
               case "%":
