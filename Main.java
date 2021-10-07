@@ -17,8 +17,7 @@ class Main {
     return randomArray[_int];
   }
 
-  public static void populateArray() { // this method will populate an array with "random" numbers that the user might
-                                       // need
+  public static void populateArray() { // this method will populate an array with "random" numbers
     int howManyLines = 0;
     try {
       // Run a counter on the file to check the lines = array, if so enter the values
