@@ -33,56 +33,91 @@ public class InputHandler {
     if (string == null || string.length() == 0) { // NullorEmpty string, send plain whitespace handled by doMath
       return " ";
     } else {
-      String noComments = string.replaceAll("#.*?#", ""); // comments must be enclosed with #
-      String removeNotAllowed = noComments.replaceAll(notChars, "");// remove everything that we dont care about
-      String removeWhitespaces = removeNotAllowed.replaceAll("\\s+", " ");// remove extra whitespaces
-      if (removeWhitespaces == null || removeWhitespaces.length() == 0) {
+      String noComments = string.replaceAll("# .*? #", ""); // comments must be enclosed with # and a space - bug replicated - fix with "#.*?#" regex
+      String reversedEqualSignOperators = reverseEqualSignOperator(noComments);
+      String removedCharacters = removeNotAllowed(reversedEqualSignOperators);
+      if (removedCharacters == null || removedCharacters.length() == 0) {
         return " ";
       } else {
-        return addWhitetoOperator(removeWhitespaces.trim());
+        return removedCharacters.trim();
       }
     }
   }
 
-  // This method is called to place a whitespace between user input to make
-  // sure everything reaches the math method in the same format
-  // 1+1 == 1 + 1
-  private static String addWhitetoOperator(String string) {
-    StringBuilder stringBuilder = new StringBuilder();
-    for (String character : string.split("")) {
-      switch (character) {
+  public static String reverseEqualSignOperator(String stringToModify){
+    try{
+      //Method to add functionality that reverses any operator attached to equal sign i.e. ^= becomes =^
+      if (stringToModify!=null){
+        int indexOfReversal = 0;
+        StringBuilder stringWithModifications = new StringBuilder();
+        String [] differentCases = {"+=" , "-=", "*=" , "/=", "%=","^="};
+        for (String item : differentCases){ //look for all different cases
+          if(stringToModify.indexOf(item) != -1){ //case found
+            indexOfReversal = stringToModify.indexOf(item);
+            char[] stringInChars = stringToModify.toCharArray();
+            int appendInt = 0;
+            for(appendInt=0;appendInt<indexOfReversal;appendInt++){
+              stringWithModifications.append(stringInChars[appendInt]);
+            }
+            stringWithModifications.append(stringInChars[appendInt+1]);
+            stringWithModifications.append(stringInChars[appendInt]);
+            for(appendInt=appendInt+2;appendInt<stringInChars.length;appendInt++){
+              stringWithModifications.append(stringInChars[appendInt]);
+            }
+            stringToModify = stringWithModifications.toString();
+          }
+        }
+        return stringToModify;
+      } else {
+        return " ";
+      } 
+    } catch (Exception e){
+      return " ";
+    }
+  }
+
+  private static String removeNotAllowed(String stringToClean){
+    StringBuilder cleanString = new StringBuilder();
+    for (String character : stringToClean.split("")){
+      switch(character) {
+        case " ":
+          cleanString.append(",");
+          break;
         case "+":
-          stringBuilder.append(" + ");
+          cleanString.append(",+,");
           break;
         case "-":
-          stringBuilder.append(" -");
+          cleanString.append(",-");
           break;
         case "/":
-          stringBuilder.append(" / ");
+          cleanString.append(",/,");
           break;
         case "%":
-          stringBuilder.append(" % ");
+          cleanString.append(",%,");
           break;
         case "*":
-          stringBuilder.append(" * ");
+          cleanString.append(",*,");
           break;
         case "=":
-          stringBuilder.append(" = ");
+          cleanString.append(",=");
           break;
         case "d":
-          stringBuilder.append(" d ");
+          cleanString.append(",d,");
           break;
         case "r":
-          stringBuilder.append(" r ");
+          cleanString.append(",r,");
           break;
         case "^":
-          stringBuilder.append(" ^ ");
+          cleanString.append(",^,");
           break;
         default:
-          stringBuilder.append(character);
-          break;
+          if (character.matches("[0-9]*")){
+            cleanString.append(character);
+          } else {
+            System.out.println("Unrecognised operator or operand \"" + character + "\".");
+          }
       }
     }
-    return stringBuilder.toString();
+    return cleanString.toString();
   }
 }
