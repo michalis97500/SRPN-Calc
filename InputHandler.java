@@ -13,7 +13,7 @@ public class InputHandler {
       userin = input.readLine();
       return cleanString(userin);
     } catch (IOException e) {
-      System.out.println("Error in reading line : " + e);
+      //System.out.println("Error in reading line : " + e);
       userin = " ";
       return userin;
     }

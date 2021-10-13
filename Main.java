@@ -45,7 +45,7 @@ class Main {
           System.out.format("%.0f\n", last);
         }
         if (oper.matches("r")) { // Random
-          if (n > 59) {
+          if (n > 21) {
             n = 0;
           }
           pushDoubleToStack(stack, rng.randomNumber(n));
